@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <label for="uid">User Id:</label>
+	<input type="text" id="uid" name="uid"></input><br>
+    <label for="fname">First Name:</label>
+	<input type="text" id="fname" name="fname" size=40></input><br>
+    <label for="lname">Last Name:</label>
+	<input type="text" id="lname" name="lname" size=40></input><br>
+    <label for="birthday">Birthday:</label>
+	<input type="date" id="birthday" name="birthday"></input><br>
+    <button onclick="btnClick();">Accept</button>
+	<p id="error_text" style="color:red;"></p>
+	<p id="date_diff"></p>
+    <p id="star_loop"></p>
+</body>
+<script>
+function validateInputs() {
+    var errorObj = document.getElementById('error_text');
+    errorObj.innerHTML = '';
+    var idInput = document.getElementById('uid').value;
+    if (idInput == '' || idInput == null || idInput.length == 0) {
+        errorObj.innerHTML = "Invalid User ID. User ID shouldn't be empty!";
+    }
+    var spChar = "/[!@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]+/\"\"";
+    var upper = false;
+    var lower = false;
+    var num = false;
+    var spec_char = false;
+    for (var i = 0; i < idInput.length; i++) {
+        var ch = idInput.charAt(i);
+        if (!spec_char && (spChar.indexOf(ch) != -1)) {
+            spec_char = spec_char || true;
+	    continue;
+        }
+        if (!num && !(isNaN(parseInt(ch)))) {
+            num = num || true;
+	    continue;
+        } else if (!upper && (ch == ch.toUpperCase())) {
+            upper = upper || true;
+        } else if (!lower && (ch == ch.toLowerCase())) {
+            lower = lower || true;
+        }
+    }
+	
+    if (!upper) {
+        errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Uppercase Letter!";
+    }
+    if (!lower) {
+        errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Lowercase Letter!";
+    }
+    if (!num) {
+        errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Number!";
+    }
+    if (!spec_char) {
+        errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Special Character!";
+    }	
+	var fname = document.getElementById('fname').value;
+	if(fname == '' || fname == null || fname.length == 0){
+		errorObj.innerHTML = errorObj.innerHTML +"<br>Invalid First Name!";
+	}
+	var lname = document.getElementById('lname').value;
+	if(lname == '' || lname == null || lname.length == 0){
+		errorObj.innerHTML = errorObj.innerHTML +"<br>Invalid Last Name!";
+	}
+	var dateValue = document.getElementById('birthday').value;
+	if(!Date.parse(dateValue) || dateValue == '' || dateValue == null || dateValue.length == 0){
+		errorObj.innerHTML = errorObj.innerHTML +"<br>Invalid date!";
+		document.getElementById('date_diff').innerHTML = '';
+	}
+}
+
+function dateDiff(bDate){
+	var birthDay=new Date(bDate);
+	var date=new Date();
+	var numOfDays = parseInt((date.getTime()-birthDay.getTime())/(24*3600*1000));
+	return numOfDays;
+}
+function btnClick(){
+	var days= dateDiff(document.getElementById('birthday').value); 
+	document.getElementById('error_text').innerHTML = ''; 
+	if(days < 365*18){
+		document.getElementById('date_diff').innerHTML='You are probably not old enough to take this class!'; 
+	}else{
+		document.getElementById('date_diff').innerHTML = document.getElementById('fname').value+' '+document.getElementById('lname').value+' you have been breathing for '+days+' days!';
+	}
+		 validateInputs();
+	}
+
+function starLoop(){
+	var str='';
+	for(var i=1; i<=20; i++){		
+		document.getElementById('star_loop').innerHTML = document.getElementById('star_loop').innerHTML +str.padStart(i,"x")+ '<br>';
+	}	 
+}
+starLoop();
+</script>
+</html>
