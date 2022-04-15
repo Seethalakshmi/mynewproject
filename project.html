@@ -15,69 +15,332 @@
     <p id="star_loop"></p>
 </body>
 <script>
+
+    // unit testing
+
+
+    // test_validateInputs();
+    // function test_validateInputs(){
+    //     errorObj = document.getElementById('error_text');
+    //     document.getElementById('uid').value = '';
+    //
+    //     // test for empty user id;
+    //     validateInputs();
+    //     console.assert(errorObj.innerHTML.indexOf("Invalid User ID. User ID shouldn't be empty!") !=-1, 'empty userid');
+    //     document.getElementById('uid').value = 'a';
+    //     //test for valid user id
+    //     validateInputs();
+    //     console.assert(errorObj.innerHTML.indexOf("Invalid User ID. User ID shouldn't be empty!") ==-1, 'Valid userid');
+    //     document.getElementById('uid').value = null;
+    //     validateInputs();
+    //     console.assert(errorObj.innerHTML.indexOf("Invalid User ID. User ID shouldn't be empty!") !=-1, 'Null userid');
+    // }
+
+
 function validateInputs() {
-    var errorObj = document.getElementById('error_text');
-    errorObj.innerHTML = '';
-    var idInput = document.getElementById('uid').value;
-    if (idInput == '' || idInput == null || idInput.length == 0) {
+    let errorObj = ''
+    errorObj = document.getElementById('error_text')
+    errorObj.innerHTML = ''
+    let idInput = document.getElementById('uid').value
+    // if (idInput == '' || idInput == null || idInput.length == 0) {
+    //     errorObj.innerHTML = "Invalid User ID. User ID shouldn't be empty!";
+    // }
+
+    // let spChar = "/[!@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]+/\"\"";
+
+
+    // for (let i = 0; i < idInput.length; i++) {
+    //     let ch = idInput.charAt(i);
+    //     // if (!spec_char && (spChar.indexOf(ch) != -1)) {
+    //     //     spec_char = spec_char || true;
+	//     // continue;
+    //     // }
+    //     // if (!num && !(isNaN(parseInt(ch)))) {
+    //     //     num = num || true;
+	//     // continue;
+    //     // } else if (!upper && (ch == ch.toUpperCase())) {
+    //     //     upper = upper || true;
+    //     } else if (!lower && (ch == ch.toLowerCase())) {
+    //         lower = lower || true;
+    //     }
+    // }
+    let empty = containEmpty(idInput)
+    if (empty)
         errorObj.innerHTML = "Invalid User ID. User ID shouldn't be empty!";
+    if(idInput.length >=8 && idInput.length <=12) {
+
+        let upper = containUpper(idInput)
+        let lower = containLower(idInput)
+        let num = containNum(idInput)
+        let spec_char = containSpecial(idInput)
+        if (!upper)
+            errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Uppercase Letter!";
+
+        if (!lower)
+            errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Lowercase Letter!";
+
+        if (!num)
+            errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Number!";
+
+        if (!spec_char)
+            errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Special Character!";
     }
-    var spChar = "/[!@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]+/\"\"";
-    var upper = false;
-    var lower = false;
-    var num = false;
-    var spec_char = false;
-    for (var i = 0; i < idInput.length; i++) {
-        var ch = idInput.charAt(i);
-        if (!spec_char && (spChar.indexOf(ch) != -1)) {
-            spec_char = spec_char || true;
-	    continue;
-        }
-        if (!num && !(isNaN(parseInt(ch)))) {
-            num = num || true;
-	    continue;
-        } else if (!upper && (ch == ch.toUpperCase())) {
-            upper = upper || true;
-        } else if (!lower && (ch == ch.toLowerCase())) {
-            lower = lower || true;
-        }
-    }
-	
-    if (!upper) {
-        errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Uppercase Letter!";
-    }
-    if (!lower) {
-        errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Lowercase Letter!";
-    }
-    if (!num) {
-        errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Number!";
-    }
-    if (!spec_char) {
-        errorObj.innerHTML = errorObj.innerHTML + "<br>User ID should contain atleast one Special Character!";
-    }	
-	var fname = document.getElementById('fname').value;
-	if(fname == '' || fname == null || fname.length == 0){
+	let fName = document.getElementById('fname').value
+    let fNameFlag = fNameEmpty(fName)
+	if(fNameFlag)
 		errorObj.innerHTML = errorObj.innerHTML +"<br>Invalid First Name!";
-	}
-	var lname = document.getElementById('lname').value;
-	if(lname == '' || lname == null || lname.length == 0){
+	let lName = document.getElementById('lname').value;
+    let lNameFlag = lNameEmpty(lName)
+	if(lNameFlag)
 		errorObj.innerHTML = errorObj.innerHTML +"<br>Invalid Last Name!";
-	}
-	var dateValue = document.getElementById('birthday').value;
-	if(!Date.parse(dateValue) || dateValue == '' || dateValue == null || dateValue.length == 0){
+	let dateValue = document.getElementById('birthday').value;
+    let dateFlag = birthdayEmpty(dateValue)
+	if(dateFlag){
 		errorObj.innerHTML = errorObj.innerHTML +"<br>Invalid date!";
 		document.getElementById('date_diff').innerHTML = '';
 	}
+
+
+}
+function containEmpty(idInput){
+    let emptyString = false
+    if (idInput == '' || idInput == null || idInput.length == 0){
+        emptyString = emptyString || true
+    }
+    return emptyString
+}
+function test_containEmpty(){
+    let result0 = containEmpty('')
+    if(result0 === true)
+        console.log("Passed")
+    else
+        console.log("Failed ",result0)
+}
+    function containNum(idInput){
+
+        let num = false
+
+           for (let i = 0; i < idInput.length; i++) {
+               let ch = idInput.charAt(i)
+               if (!num && !(isNaN(parseInt(ch)))) {
+                   num = num || true;
+                   //continue;
+               }
+           }
+        return num;
+    }
+    function test_containNum(){
+        let result1 = containNum('')
+        if(result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ", result1)
+        result1 = containNum('abc')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containNum('ADC')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containNum('Ab@')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containNum('@')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+    }
+    function containUpper(idInput){
+        let upperCase = false
+
+        for (let i=0; i<idInput.length; i++){
+            let ch = idInput.charAt(i)
+            if (!upperCase && (ch === ch.toUpperCase())){
+                    upperCase = upperCase || true
+            }
+        }
+        return upperCase
+    }
+    function test_containUpper(){
+        let result1 = containUpper('')
+        if(result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ", result1)
+        result1 = containUpper('abc')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containUpper('ab@')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containUpper('1')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containUpper('1@')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+    }
+    function containLower(idInput){
+        let lowerCase = false;
+        for (let i = 0; i < idInput.length; i++) {
+            let ch = idInput.charAt(i);
+            if (!lowerCase && (ch === ch.toLowerCase())) {
+                lowerCase = lowerCase || true;
+            }
+    }
+        return lowerCase
+    }
+
+    function test_containLower(){
+        let result1 = containLower('')
+        if(result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ", result1)
+        result1 = containLower('ABC')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containLower('AB@')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containLower('1@')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containLower('1')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containLower('@')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+    }
+    function containSpecial(idInput){
+        let spChar = "/[!@#$%^&*()_+\-=\[\]{};':\\|,.<>\/?]+/\"\"";
+        let spec_charCase = false;
+        for (let i = 0; i < idInput.length; i++) {
+            let ch = idInput.charAt(i);
+            if (!spec_charCase && (spChar.indexOf(ch) != -1)) {
+                spec_charCase = spec_charCase || true;
+               // continue;
+            }
+
+        }
+        return spec_charCase
+    }
+    function test_containSpecial(){
+        let result1 = containSpecial('')
+        if(result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ", result1)
+        result1 = containSpecial('ABC')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containSpecial('abc')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containSpecial('1')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containSpecial('1a')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+        result1 = containSpecial('1A')
+        if (result1 === false)
+            console.log("Passed")
+        else
+            console.log("Failed ",result1)
+    }
+function fNameEmpty(fNameInput){
+    let fNameFlag = false
+    if(fNameInput == '' || fNameInput == null || fNameInput.length == 0)
+        fNameFlag = fNameFlag || true
+    return fNameFlag
 }
 
+function test_fNameEmpty(){
+    let result6 = fNameEmpty('')
+    if(result6 === true)
+        console.log("Passed")
+    else
+        console.log("Failed ",result6)
+}
+    function lNameEmpty(lNameInput){
+        let lNameFlag = false
+        if(lNameInput === '' || lNameInput === null || lNameInput.length === 0)
+            lNameFlag = lNameFlag || true
+        return lNameFlag
+    }
+
+    function test_lNameEmpty(){
+        let result7 = lNameEmpty('')
+        if(result7 === true)
+            console.log("Passed")
+        else
+            console.log("Failed ",result7)
+    }
+    function birthdayEmpty(birthdayInput){
+        let birthdayFlag = false
+        if(!Date.parse(birthdayInput) || birthdayInput === '' || birthdayInput === null || birthdayInput.length === 0)
+            birthdayFlag = birthdayFlag || true
+        return birthdayFlag
+    }
+
+    function test_birthdayEmpty(){
+        let result8 = birthdayEmpty('')
+        if(result8 === true)
+            console.log("Passed")
+        else
+            console.log("Failed ",result8)
+    }
+
 function dateDiff(bDate){
-	var birthDay=new Date(bDate);
-	var date=new Date();
-	var numOfDays = parseInt((date.getTime()-birthDay.getTime())/(24*3600*1000));
+	let birthDay=new Date(bDate);
+	let date=new Date();
+	let numOfDays = parseInt((date.getTime()-birthDay.getTime())/(24*3600*1000));
 	return numOfDays;
 }
+ function test_dateDiff(){
+        const nOfDays = dateDiff('04/03/1990')
+        if(nOfDays === 11699)
+            console.log("Passed")
+        else
+            console.log("Failed....")
+}
+
 function btnClick(){
-	var days= dateDiff(document.getElementById('birthday').value); 
+	let days= dateDiff(document.getElementById('birthday').value);
 	document.getElementById('error_text').innerHTML = ''; 
 	if(days < 365*18){
 		document.getElementById('date_diff').innerHTML='You are probably not old enough to take this class!'; 
@@ -87,12 +350,96 @@ function btnClick(){
 		 validateInputs();
 	}
 
+    function btn_click_se(daysOutput){
+        daysOutput = dateDiff(document.getElementById('birthday').value);
+        let legalAge = 365*18
+        let ageValid = ''
+        let ageFlag = false
+        if (legalAge < daysOutput){
+            ageValid = 'You are probably not old enough to take this class!'
+            ageFlag = false
+        }else {
+            ageValid = document.getElementById('fname').value + ' ' + document.getElementById('lname').value + ' you have been breathing for ' + daysOutput + ' days!'
+            ageFlag = true
+        }
+            return ageFlag
+    }
+    function test_btn_click(){
+        let dayFlag = btn_click_se('04/03/1990')
+        if(dayFlag === true)
+            console.log("Passed")
+        else
+            console.log("Failed ",dayFlag)
+       dayFlag = btn_click_se('01/04/2022')
+        if(dayFlag === true)
+            console.log("Passed")
+        else
+            console.log("Failed ",dayFlag)
+
+    }
 function starLoop(){
-	var str='';
-	for(var i=1; i<=20; i++){		
-		document.getElementById('star_loop').innerHTML = document.getElementById('star_loop').innerHTML +str.padStart(i,"x")+ '<br>';
-	}	 
+	// let str='';
+	// for(let i=1; i<=20; i++){
+	// 	document.getElementById('star_loop').innerHTML += str.padStart(i,"x")+ '<br>';
+	// }
+     starLoop_no_se()
+    //console.log(starPattern)
+
+
 }
 starLoop();
+    function starLoop_no_se(){
+        let ret_res = ''
+        document.getElementById('star_loop').innerHTML = ''
+        for( let i=1; i<=20; i++){
+            document.getElementById('star_loop').innerHTML  += ret_res.padStart(i, "x")+'<br>'
+        }
+        return document.getElementById('star_loop').innerHTML
+    }
+    function test_starLoop(){
+        let starPat = 'x' +'<br>'+
+            'xx' + '<br>'+
+            'xxx' + '<br>'+
+            'xxxx' +'<br>'+
+            'xxxxx' + '<br>'+
+            'xxxxxx' + '<br>'+
+            'xxxxxxx' + '<br>'+
+            'xxxxxxxx' + '<br>'+
+            'xxxxxxxxx' + '<br>'+
+            'xxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxxxxxxxxx' + '<br>'+
+            'xxxxxxxxxxxxxxxxxxxx' + '<br>'
+        let starPatFromFunction = starLoop_no_se()
+        // console.log(starPat)
+        // console.log(starPatFromFunction)
+        if (starPat === starPatFromFunction)
+            console.log("Passed")
+        else
+            console.log("Failed Star Pattern")
+    }
+//test cases
+
+
+    test_containEmpty()
+    test_containNum()
+    test_containLower()
+    test_containUpper()
+    test_containSpecial()
+    test_dateDiff()
+    test_fNameEmpty()
+    test_lNameEmpty()
+    test_birthdayEmpty()
+    test_btn_click()
+    test_starLoop()
+
+
 </script>
 </html>
